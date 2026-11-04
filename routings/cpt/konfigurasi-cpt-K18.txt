@@ -1,0 +1,468 @@
+! ============================================================
+! K-18 - MODUL 4 - CIDR CPT - KONFIGURASI LENGKAP
+! Prefix 192.220.0.0/19 | OSPF 1 area 0 | NAT overload di Cyberia
+! Sumber: modul4-K18.pkt
+!
+! CARA EKSEKUSI MANUAL:
+!   1. Buka router -> tab CLI (atau console via kabel).
+!   2. Tekan Enter; jika muncul dialog awal, ketik no.
+!   3. Copy SATU blok [NamaRouter] di bawah, paste ke CLI.
+!   4. Tunggu sampai write memory selesai, lanjut router berikutnya.
+!   5. Host diatur manual: Desktop > IP Configuration (tabel di bagian 2).
+!
+! Isi file:
+!   Bagian 1 - konfigurasi 13 router (CLI)
+!   Bagian 2 - tabel IP statis 25 host (GUI)
+!   Bagian 3 - perintah verifikasi/demo
+! ============================================================
+
+! ============================================================
+! BAGIAN 1 - KONFIGURASI ROUTER
+! ============================================================
+
+
+[Cyberia]
+enable
+configure terminal
+hostname Cyberia
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.19.133 255.255.255.252
+ ip nat outside
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.19.1 255.255.255.128
+ ip nat inside
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.19.130 255.255.255.252
+ ip ospf network point-to-point
+ ip nat inside
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.19.130
+ network 192.220.19.0 0.0.0.127 area 0
+ network 192.220.19.128 0.0.0.3 area 0
+ passive-interface FastEthernet0/0
+ passive-interface FastEthernet0/1
+ default-information originate
+ exit
+access-list 1 permit 192.220.0.0 0.0.31.255
+ip nat inside source list 1 interface FastEthernet0/0 overload
+ip route 0.0.0.0 0.0.0.0 192.220.19.134
+end
+write memory
+
+[Wired]
+enable
+configure terminal
+hostname Wired
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.10.76 255.255.255.248
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.19.129 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.18.65 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet1/1
+ ip address 192.220.27.65 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.76
+ network 192.220.10.72 0.0.0.7 area 0
+ network 192.220.19.128 0.0.0.3 area 0
+ network 192.220.18.64 0.0.0.3 area 0
+ network 192.220.27.64 0.0.0.3 area 0
+ exit
+end
+write memory
+
+[Psyche]
+enable
+configure terminal
+hostname Psyche
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.0.1 255.255.252.0
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.10.73 255.255.255.248
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.73
+ network 192.220.0.0 0.0.3.255 area 0
+ network 192.220.10.72 0.0.0.7 area 0
+ passive-interface FastEthernet0/0
+ exit
+end
+write memory
+
+[Copland]
+enable
+configure terminal
+hostname Copland
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.10.1 255.255.255.192
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.8.1 255.255.254.0
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.10.74 255.255.255.248
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.74
+ network 192.220.10.0 0.0.0.63 area 0
+ network 192.220.8.0 0.0.1.255 area 0
+ network 192.220.10.72 0.0.0.7 area 0
+ passive-interface FastEthernet0/0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+[Schumann]
+enable
+configure terminal
+hostname Schumann
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.10.65 255.255.255.248
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.10.81 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.10.75 255.255.255.248
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.75
+ network 192.220.10.64 0.0.0.7 area 0
+ network 192.220.10.80 0.0.0.3 area 0
+ network 192.220.10.72 0.0.0.7 area 0
+ passive-interface FastEthernet0/0
+ exit
+end
+write memory
+
+[Accelia]
+enable
+configure terminal
+hostname Accelia
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.4.1 255.255.252.0
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.10.82 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.82
+ network 192.220.4.0 0.0.3.255 area 0
+ network 192.220.10.80 0.0.0.3 area 0
+ passive-interface FastEthernet0/0
+ exit
+end
+write memory
+
+[Navi]
+enable
+configure terminal
+hostname Navi
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.18.66 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.16.1 255.255.255.0
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.18.1 255.255.255.192
+ no shutdown
+ exit
+interface FastEthernet1/1
+ ip address 192.220.17.1 255.255.255.0
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.18.66
+ network 192.220.18.64 0.0.0.3 area 0
+ network 192.220.16.0 0.0.0.255 area 0
+ network 192.220.18.0 0.0.0.63 area 0
+ network 192.220.17.0 0.0.0.255 area 0
+ passive-interface FastEthernet0/1
+ passive-interface FastEthernet1/0
+ passive-interface FastEthernet1/1
+ exit
+end
+write memory
+
+[Tachibana]
+enable
+configure terminal
+hostname Tachibana
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.66 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.24.1 255.255.254.0
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.69 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.66
+ network 192.220.27.64 0.0.0.3 area 0
+ network 192.220.24.0 0.0.1.255 area 0
+ network 192.220.27.68 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+[Deus]
+enable
+configure terminal
+hostname Deus
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.70 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.26.1 255.255.255.128
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.73 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.70
+ network 192.220.27.68 0.0.0.3 area 0
+ network 192.220.26.0 0.0.0.127 area 0
+ network 192.220.27.72 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+[Protocol7]
+enable
+configure terminal
+hostname Protocol7
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.74 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.26.129 255.255.255.192
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.77 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.74
+ network 192.220.27.72 0.0.0.3 area 0
+ network 192.220.26.128 0.0.0.63 area 0
+ network 192.220.27.76 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+[Knights]
+enable
+configure terminal
+hostname Knights
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.78 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.26.193 255.255.255.248
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.81 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.78
+ network 192.220.27.76 0.0.0.3 area 0
+ network 192.220.26.192 0.0.0.7 area 0
+ network 192.220.27.80 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+[Phantom]
+enable
+configure terminal
+hostname Phantom
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.82 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.26.225 255.255.255.224
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.85 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.82
+ network 192.220.27.80 0.0.0.3 area 0
+ network 192.220.26.224 0.0.0.31 area 0
+ network 192.220.27.84 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+[Shibuya]
+enable
+configure terminal
+hostname Shibuya
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.86 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.27.1 255.255.255.192
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.86
+ network 192.220.27.84 0.0.0.3 area 0
+ network 192.220.27.0 0.0.0.63 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
+
+! ============================================================
+! BAGIAN 2 - IP STATIS HOST (Desktop > IP Configuration)
+! ============================================================
+
+# Host static IP configuration (Desktop > IP Configuration)
+# host | model | ip | mask | gateway | subnet
+Karl | Server-PT | 192.220.0.2 | 255.255.252.0 | 192.220.0.1 | A1
+Lin | Server-PT | 192.220.0.3 | 255.255.252.0 | 192.220.0.1 | A1
+Juri | Laptop-PT | 192.220.10.2 | 255.255.255.192 | 192.220.10.1 | A4
+Masayuki | Laptop-PT | 192.220.8.2 | 255.255.254.0 | 192.220.8.1 | A3
+Akashic | Server-PT | 192.220.10.66 | 255.255.255.248 | 192.220.10.65 | A5
+Omnipresence | PC-PT | 192.220.4.2 | 255.255.252.0 | 192.220.4.1 | A2
+Denpa | Laptop-PT | 192.220.4.3 | 255.255.252.0 | 192.220.4.1 | A2
+JJ | PC-PT | 192.220.19.2 | 255.255.255.128 | 192.220.19.1 | A12
+MyuMyu | Laptop-PT | 192.220.19.3 | 255.255.255.128 | 192.220.19.1 | A12
+Alice | Laptop-PT | 192.220.16.2 | 255.255.255.0 | 192.220.16.1 | A8
+Reika | PC-PT | 192.220.16.3 | 255.255.255.0 | 192.220.16.1 | A8
+Taro | PC-PT | 192.220.18.2 | 255.255.255.192 | 192.220.18.1 | A10
+Yasuo | PC-PT | 192.220.17.2 | 255.255.255.0 | 192.220.17.1 | A9
+Miho | Laptop-PT | 192.220.17.3 | 255.255.255.0 | 192.220.17.1 | A9
+Kuma | Server-PT | 192.220.17.4 | 255.255.255.0 | 192.220.17.1 | A9
+Collective | Server-PT | 192.220.24.2 | 255.255.254.0 | 192.220.24.1 | A15
+Ghost | PC-PT | 192.220.24.3 | 255.255.254.0 | 192.220.24.1 | A15
+Lilith | Laptop-PT | 192.220.26.2 | 255.255.255.128 | 192.220.26.1 | A16
+Specter | PC-PT | 192.220.26.3 | 255.255.255.128 | 192.220.26.1 | A16
+Chisa | Laptop-PT | 192.220.26.130 | 255.255.255.192 | 192.220.26.129 | A17
+Hodgson | PC-PT | 192.220.26.131 | 255.255.255.192 | 192.220.26.129 | A17
+Eri | Server-PT | 192.220.26.194 | 255.255.255.248 | 192.220.26.193 | A18
+Semi | PC-PT | 192.220.26.226 | 255.255.255.224 | 192.220.26.225 | A19
+Lain | Laptop-PT | 192.220.27.2 | 255.255.255.192 | 192.220.27.1 | A20
+Mika | PC-PT | 192.220.27.3 | 255.255.255.192 | 192.220.27.1 | A20
+
+! ============================================================
+! BAGIAN 3 - VERIFIKASI / DEMO
+! ============================================================
+
+! ============================================================
+! K-18 - Modul 4 - CIDR CPT - verification checklist
+! ============================================================
+
+! --- On any router (CLI) ---
+show ip ospf neighbor
+show ip route
+show ip interface brief
+show running-config
+
+! Expected:
+! - 13 routers, 30 OSPF neighbours, all FULL (2WAY only between DROTHERs)
+! - every router has 26 routes: connected + OSPF + default 0.0.0.0/0
+! - all interfaces up/up
+
+! --- On Cyberia (NAT) ---
+show ip nat translations
+show ip nat statistics
+show access-lists
+
+! Expected:
+! - Fa0/0 = outside, Fa0/1 + Fa1/0 = inside
+! - after JJ pings 8.8.8.8 (even though it fails): translation
+!   192.220.19.2 -> 192.220.19.133 for 8.8.8.8
+
+! --- On a PC (Desktop > Command Prompt) ---
+ipconfig
+ping 192.220.0.1
+ping 192.220.27.3
+ping 192.220.24.2
+ping 192.220.26.194
+
+! Expected:
+! - ipconfig matches hosts.txt
+! - 25/25 hosts can ping their gateway
+! - cross-branch pings are 4/4 (first ping may lose one packet to ARP)

@@ -1,0 +1,21 @@
+enable
+configure terminal
+hostname Shibuya
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.86 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.27.1 255.255.255.192
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.86
+ network 192.220.27.84 0.0.0.3 area 0
+ network 192.220.27.0 0.0.0.63 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory

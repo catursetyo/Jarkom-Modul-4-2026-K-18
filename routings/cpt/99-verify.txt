@@ -1,0 +1,36 @@
+! ============================================================
+! K-18 - Modul 4 - CIDR CPT - verification checklist
+! ============================================================
+
+! --- On any router (CLI) ---
+show ip ospf neighbor
+show ip route
+show ip interface brief
+show running-config
+
+! Expected:
+! - 13 routers, 30 OSPF neighbours, all FULL (2WAY only between DROTHERs)
+! - every router has 26 routes: connected + OSPF + default 0.0.0.0/0
+! - all interfaces up/up
+
+! --- On Cyberia (NAT) ---
+show ip nat translations
+show ip nat statistics
+show access-lists
+
+! Expected:
+! - Fa0/0 = outside, Fa0/1 + Fa1/0 = inside
+! - after JJ pings 8.8.8.8 (even though it fails): translation
+!   192.220.19.2 -> 192.220.19.133 for 8.8.8.8
+
+! --- On a PC (Desktop > Command Prompt) ---
+ipconfig
+ping 192.220.0.1
+ping 192.220.27.3
+ping 192.220.24.2
+ping 192.220.26.194
+
+! Expected:
+! - ipconfig matches hosts.txt
+! - 25/25 hosts can ping their gateway
+! - cross-branch pings are 4/4 (first ping may lose one packet to ARP)

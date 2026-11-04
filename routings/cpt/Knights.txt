@@ -1,0 +1,27 @@
+enable
+configure terminal
+hostname Knights
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.78 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.26.193 255.255.255.248
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.81 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.78
+ network 192.220.27.76 0.0.0.3 area 0
+ network 192.220.26.192 0.0.0.7 area 0
+ network 192.220.27.80 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory

@@ -1,0 +1,20 @@
+enable
+configure terminal
+hostname Psyche
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.0.1 255.255.252.0
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.10.73 255.255.255.248
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.73
+ network 192.220.0.0 0.0.3.255 area 0
+ network 192.220.10.72 0.0.0.7 area 0
+ passive-interface FastEthernet0/0
+ exit
+end
+write memory

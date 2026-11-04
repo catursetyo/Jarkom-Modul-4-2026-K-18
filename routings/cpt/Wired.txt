@@ -1,0 +1,32 @@
+enable
+configure terminal
+hostname Wired
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.10.76 255.255.255.248
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.19.129 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.18.65 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet1/1
+ ip address 192.220.27.65 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.10.76
+ network 192.220.10.72 0.0.0.7 area 0
+ network 192.220.19.128 0.0.0.3 area 0
+ network 192.220.18.64 0.0.0.3 area 0
+ network 192.220.27.64 0.0.0.3 area 0
+ exit
+end
+write memory

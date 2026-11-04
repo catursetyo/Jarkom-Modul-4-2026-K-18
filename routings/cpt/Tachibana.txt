@@ -1,0 +1,27 @@
+enable
+configure terminal
+hostname Tachibana
+no ip domain-lookup
+interface FastEthernet0/0
+ ip address 192.220.27.66 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+interface FastEthernet0/1
+ ip address 192.220.24.1 255.255.254.0
+ no shutdown
+ exit
+interface FastEthernet1/0
+ ip address 192.220.27.69 255.255.255.252
+ ip ospf network point-to-point
+ no shutdown
+ exit
+router ospf 1
+ router-id 192.220.27.66
+ network 192.220.27.64 0.0.0.3 area 0
+ network 192.220.24.0 0.0.1.255 area 0
+ network 192.220.27.68 0.0.0.3 area 0
+ passive-interface FastEthernet0/1
+ exit
+end
+write memory
