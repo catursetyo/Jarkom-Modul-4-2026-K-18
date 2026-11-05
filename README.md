@@ -1,4 +1,4 @@
-# Praktikum Jarkom Modul 4 - Kelompok K-18 (CPT)
+# Praktikum Jarkom Modul 4 - Kelompok K-18 
 
 ## Anggota
 
@@ -11,7 +11,7 @@
 
 - Spreadsheet: [Subnetting Modul 4 - K18](https://docs.google.com/spreadsheets/d/16MgZ-wjODwT19-tLmBUZSpoHsj5G79vuBlR4NnrGunE/edit?usp=sharing)
 
-## Topologi
+## Topologi CPT
 
 ![Topologi CPT](assets/cpt_topology.png)
 
