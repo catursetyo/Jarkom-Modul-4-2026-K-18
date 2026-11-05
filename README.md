@@ -63,10 +63,6 @@ Zoom area supernet:
 
 ![Supernet B22](assets/B22.png)
 
-Diagram penggunaan subnet:
-
-![Diagram penggunaan subnet](assets/subnet-usage.png)
-
 Total alokasi 4.192 dari 8.192 alamat; sisa 4.000 adalah ekor blok induk yang
 tidak dialokasikan. Detail penggabungan ada di sheet **Penggabungan - CIDR**.
 
