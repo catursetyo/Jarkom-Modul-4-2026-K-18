@@ -136,6 +136,9 @@ show ip nat translations
 
 Harus muncul translasi `192.220.19.2 → 192.220.19.133`.
 
+Di varian `modul4-K18-internet.pkt`, ping 8.8.8.8 dan google.com berhasil;
+translasi memakai `192.220.19.2 → 192.220.28.1`.
+
 Checklist lengkap ada di `routings/cpt/99-verify.txt`.
 
 ### Hasil
@@ -270,3 +273,22 @@ iface eth0 inet static
 | **Cabang ke Gateway Core** | Lain (`192.220.15.194`) → JJ (`192.220.14.2`) | 0% Loss | 3/3 Received (0% Loss) | **LULUS** |
 | **Akses Internet (NAT)** | Client Host → Internet DNS (`8.8.8.8`) | Reply / Translasi Terbentuk | 0% Loss via Cyberia eth0 | **LULUS** |
 ---
+
+
+## Varian Internet
+
+File `modul4-K18-internet.pkt` adalah varian demo agar dapat ping 8.8.8.8 dan
+google.com. Perubahannya:
+
+- ISP 2911: Gi0/0 `192.220.28.2/30` ke Cyberia Fa1/1; Gi0/1 `8.8.8.1/24`.
+- Cyberia: Fa1/1 `192.220.28.1/30` (NAT outside); default route ke
+  `192.220.28.2`; NAT overload pindah ke Fa1/1.
+- Server `Internet`: `8.8.8.8/24`, gateway `8.8.8.1`, DNS A `google.com` dan
+  `www.google.com` → `8.8.8.8`; service DNS aktif.
+- Host: DNS `8.8.8.8`.
+
+Hasil uji: dari JJ, `ping 8.8.8.8` reply dan `ping google.com` resolve ke
+`8.8.8.8` lalu reply. NAT mencatat translasi ICMP + DNS ke `192.220.28.1`.
+
+Catatan: varian ini menambah ISP, server, dan subnet `192.220.28.0/30` di luar
+tabel A1-A26. File submission tetap `modul4-K18.pkt` (topologi sesuai soal).
