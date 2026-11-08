@@ -201,6 +201,19 @@ Aturan: **Jumlah IP = host + alamat interface router** pada subnet tersebut.
 | **Eiri** | A21 | `192.220.16.48/29` | `192.220.16.50` | `255.255.255.248` | `192.220.16.49` (Knights) |
 
 ---
+## Konfigurasi Jaringan Permanen (`/etc/network/interfaces`) — [REVISI]
+Setiap node Docker pada GNS3 menyimpan file antarmuka statis pada `/etc/network/interfaces` sehingga terbaca resmi pada jendela **Edit config** GUI GNS3 dan tidak hilang saat container restart.
+Format standar yang diterapkan pada seluruh host:
+```text
+auto eth0
+iface eth0 inet static
+	address <IP Address>
+	netmask <Netmask>
+	gateway <Gateway>
+	up echo nameserver 8.8.8.8 > /etc/resolv.conf
+```
+> File referensi copy-paste siap pakai untuk ke-25 node tersedia di: [`KONFIGURASI_COPY_PASTE_SEMUA_NODE_VLSM.md`](KONFIGURASI_COPY_PASTE_SEMUA_NODE_VLSM.md).
+---
 ## Routing dan NAT (GNS3)
 1. **Hierarchical Static Routing:**
    - **Router Edge/Cabang:** Memasang *Default Route* (`0.0.0.0/0`) yang mengarah ke hop berikutnya menuju router Core (`Wired` / `Cyberia`).
@@ -217,4 +230,43 @@ Aturan: **Jumlah IP = host + alamat interface router** pada subnet tersebut.
      ```bash
      bash /root/init.sh
      ```
+---
+   Buka konsol router (misal `Wired`, `Cyberia`, `Tachibana`, `Navi`), jalankan:
+   ```bash
+   ip -br a
+   ip route
+   ```
+   *Target:* Seluruh interface `UP` dan tabel rute memiliki rute yang sesuai dengan tabel VLSM.
+3. **Uji Multi-Hop Antar-Cabang (Cross-Branch):**
+   - **Karl (cabang Psyche) ke Lain (cabang Shibuya):** Melintasi 8 router secara berturut-turut.
+     ```bash
+     ping -c 3 192.220.15.194
+     ```
+     *Hasil:* 3 packets transmitted, 3 received, **0% packet loss**.
+   - **Alice (cabang Navi) ke Omnipresence (cabang Accela):** Uji silang dari sayap kanan ke sayap kiri.
+     ```bash
+     ping -c 3 192.220.4.2
+     ```
+     *Hasil:* 3 packets transmitted, 3 received, **0% packet loss**.
+   - **Lain (cabang Shibuya) ke JJ (cabang Cyberia):** Uji cabang terjauh ke router gateway.
+     ```bash
+     ping -c 3 192.220.14.2
+     ```
+     *Hasil:* 3 packets transmitted, 3 received, **0% packet loss**.
+4. **Uji Akses Internet (NAT Masquerade):**
+   Dari client pengguna:
+   ```bash
+   ping -c 3 8.8.8.8
+   ```
+   *Hasil:* Berhasil menerima balasan dari IP publik eksternal melalui NAT Masquerade `Cyberia`.
+
+   ---
+### Tabel Hasil Pengujian GNS3
+| Skenario Pengujian | Titik Uji Asal & Tujuan | Target Hasil | Hasil Aktual | Status |
+|---|---|---|---|---|
+| **Konektivitas Lokal** | 25 Client ke Default Gateway masing-masing | 0% Loss | 25/25 Berhasil | **LULUS (100%)** |
+| **Lintas Cabang Ekstrem** | Karl (`192.220.0.2`) → Lain (`192.220.15.194`) | 0% Loss | 3/3 Received (0% Loss) | **LULUS** |
+| **Lintas Sayap Kanan-Kiri** | Alice (`192.220.12.2`) → Omnipresence (`192.220.4.2`) | 0% Loss | 3/3 Received (0% Loss) | **LULUS** |
+| **Cabang ke Gateway Core** | Lain (`192.220.15.194`) → JJ (`192.220.14.2`) | 0% Loss | 3/3 Received (0% Loss) | **LULUS** |
+| **Akses Internet (NAT)** | Client Host → Internet DNS (`8.8.8.8`) | Reply / Translasi Terbentuk | 0% Loss via Cyberia eth0 | **LULUS** |
 ---
