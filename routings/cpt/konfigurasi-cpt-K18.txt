@@ -1,25 +1,6 @@
 ! ============================================================
-! K-18 - MODUL 4 - CIDR CPT - KONFIGURASI LENGKAP
-! Prefix 192.220.0.0/19 | OSPF 1 area 0 | NAT overload di Cyberia
-! Sumber: modul4-K18.pkt
-!
-! CARA EKSEKUSI MANUAL:
-!   1. Buka router -> tab CLI (atau console via kabel).
-!   2. Tekan Enter; jika muncul dialog awal, ketik no.
-!   3. Copy SATU blok [NamaRouter] di bawah, paste ke CLI.
-!   4. Tunggu sampai write memory selesai, lanjut router berikutnya.
-!   5. Host diatur manual: Desktop > IP Configuration (tabel di bagian 2).
-!
-! Isi file:
-!   Bagian 1 - konfigurasi 13 router (CLI)
-!   Bagian 2 - tabel IP statis 25 host (GUI)
-!   Bagian 3 - perintah verifikasi/demo
-! ============================================================
-
-! ============================================================
 ! BAGIAN 1 - KONFIGURASI ROUTER
 ! ============================================================
-
 
 [Cyberia]
 enable
@@ -428,10 +409,6 @@ Mika | PC-PT | 192.220.27.3 | 255.255.255.192 | 192.220.27.1 | A20
 
 ! ============================================================
 ! BAGIAN 3 - VERIFIKASI / DEMO
-! ============================================================
-
-! ============================================================
-! K-18 - Modul 4 - CIDR CPT - verification checklist
 ! ============================================================
 
 ! --- On any router (CLI) ---
