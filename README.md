@@ -28,18 +28,43 @@ Aturan: **jumlah IP = host + alamat interface router** pada subnet tersebut.
 - Setelah pembulatan per subnet: **4.192 alamat**.
 - `/20` = 4.096 alamat → tidak cukup; **`/19` = 8.192 alamat** → dipakai.
 
-Contoh:
+Tabel subnet CIDR (A1–A26):
 
-| Subnet | Prefix | Butuh | Perhitungan |
-|---|---|---|---|
-| A1 | /22 | 881 | Karl 700 + Lin 180 + Psyche 1 |
-| A2 | /22 | 514 | Omni 510 + Denpa 3 + Accelia 1; `/23` hanya 510 |
-| A8 | /24 | 254 | Alice 208 + Reika 45 + Navi 1; pas 254 |
-| A12 | /25 | 126 | JJ 95 + MyuMyu 30 + Cyberia 1; pas 126 |
-| A20 | /26 | 62 | Lain 57 + Mika 4 + Shibuya 1; pas 62 |
+| Subnet | Prefix | Network | Butuh | Keterangan |
+|---|---|---|---|---|
+| A1 | /22 | 192.220.0.0 | 881 | Karl 700 + Lin 180 + Psyche |
+| A2 | /22 | 192.220.4.0 | 514 | Omnipresence 510 + Denpa 3 + Accelia |
+| A3 | /23 | 192.220.8.0 | 301 | Masayuki 300 + Copland |
+| A4 | /26 | 192.220.10.0 | 32 | Juri 31 + Copland |
+| A5 | /29 | 192.220.10.64 | 4 | Akashic 3 + Schumann |
+| A6 | /29 | 192.220.10.72 | 4 | Switch2 transit (4 router) |
+| A7 | /30 | 192.220.10.80 | 2 | Schumann - Accelia |
+| A8 | /24 | 192.220.16.0 | 254 | Alice 208 + Reika 45 + Navi |
+| A9 | /24 | 192.220.17.0 | 143 | Yasuo 120 + Miho 18 + Kuma 4 + Navi |
+| A10 | /26 | 192.220.18.0 | 58 | Taro 57 + Navi |
+| A11 | /30 | 192.220.18.64 | 2 | Wired - Navi |
+| A12 | /25 | 192.220.19.0 | 126 | JJ 95 + MyuMyu 30 + Cyberia |
+| A13 | /30 | 192.220.19.128 | 2 | Wired - Cyberia |
+| A14 | /30 | 192.220.19.132 | 2 | Cyberia - Cloud (NAT) |
+| A15 | /23 | 192.220.24.0 | 267 | Collective 260 + Ghost 6 + Tachibana |
+| A16 | /25 | 192.220.26.0 | 99 | Lilith 77 + Specter 21 + Deus |
+| A17 | /26 | 192.220.26.128 | 33 | Chisa 23 + Hodgson 9 + Protocol7 |
+| A18 | /29 | 192.220.26.192 | 3 | Eri 2 + Knights |
+| A19 | /27 | 192.220.26.224 | 15 | Semi 14 + Phantom |
+| A20 | /26 | 192.220.27.0 | 62 | Lain 57 + Mika 4 + Shibuya |
+| A21 | /30 | 192.220.27.64 | 2 | Wired - Tachibana |
+| A22 | /30 | 192.220.27.68 | 2 | Tachibana - Deus |
+| A23 | /30 | 192.220.27.72 | 2 | Deus - Protocol7 |
+| A24 | /30 | 192.220.27.76 | 2 | Protocol7 - Knights |
+| A25 | /30 | 192.220.27.80 | 2 | Knights - Phantom |
+| A26 | /30 | 192.220.27.84 | 2 | Phantom - Shibuya |
 
-Tabel lengkap 26 subnet ada di `Subnetting_Modul4_K-18.xlsx` sheet
-**Pembagian IP - CIDR**.
+A6, A7, A11, A13, A14, dan A21–A26 tidak punya host; hanya subnet transit/link
+router. Detail Network ID, broadcast, range IP, dan IP host ada di
+`Subnetting_Modul4_K-18.xlsx` sheet **Pembagian IP - CIDR**.
+
+Contoh: A2 514 → `/22` (karena `/23` hanya 510); A8 254 → `/24` (pas);
+A12 126 → `/25` (pas); A20 62 → `/26` (pas).
 
 ### Tabel host dan subnet
 
@@ -70,9 +95,6 @@ Tabel lengkap 26 subnet ada di `Subnetting_Modul4_K-18.xlsx` sheet
 | Semi | A19 | 192.220.26.224/27 | 192.220.26.226 | 255.255.255.224 | 192.220.26.225 |
 | Lain | A20 | 192.220.27.0/26 | 192.220.27.2 | 255.255.255.192 | 192.220.27.1 |
 | Mika | A20 | 192.220.27.0/26 | 192.220.27.3 | 255.255.255.192 | 192.220.27.1 |
-
-Subnet mengikuti penomoran xlsx/CPT. Gambar `assets/subnet.png` memakai
-penomoran A1-A4 yang berbeda, jadi jangan dicampur saat demo.
 
 ## Supernet
 
@@ -138,8 +160,6 @@ Harus muncul translasi `192.220.19.2 → 192.220.19.133`.
 
 Di varian `modul4-K18-internet.pkt`, ping 8.8.8.8 dan google.com berhasil;
 translasi memakai `192.220.19.2 → 192.220.28.1`.
-
-Checklist lengkap ada di `routings/cpt/99-verify.txt`.
 
 ### Hasil
 
