@@ -215,7 +215,6 @@ iface eth0 inet static
 	gateway <Gateway>
 	up echo nameserver 8.8.8.8 > /etc/resolv.conf
 ```
-> File referensi copy-paste siap pakai untuk ke-25 node tersedia di: [`KONFIGURASI_COPY_PASTE_SEMUA_NODE_VLSM.md`](KONFIGURASI_COPY_PASTE_SEMUA_NODE_VLSM.md).
 ---
 ## Routing dan NAT (GNS3)
 1. **Hierarchical Static Routing:**
@@ -286,6 +285,11 @@ google.com. Perubahannya:
 - Server `Internet`: `8.8.8.8/24`, gateway `8.8.8.1`, DNS A `google.com` dan
   `www.google.com` → `8.8.8.8`; service DNS aktif.
 - Host: DNS `8.8.8.8`.
+
+Kenapa perlu ISP: Cloud-PT hanya stub L2 dan tidak meneruskan paket ke internet
+nyata; NAT Cyberia hanya mengubah alamat, bukan menyediakan next hop. ISP +
+server `8.8.8.8` memberi next hop, tujuan, dan DNS agar `ping 8.8.8.8` dan
+`ping google.com` berhasil.
 
 Hasil uji: dari JJ, `ping 8.8.8.8` reply dan `ping google.com` resolve ke
 `8.8.8.8` lalu reply. NAT mencatat translasi ICMP + DNS ke `192.220.28.1`.
