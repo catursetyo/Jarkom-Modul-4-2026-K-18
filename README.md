@@ -175,6 +175,7 @@ translasi memakai `192.220.19.2 → 192.220.28.1`.
 ![Topologi GNS3](assets/gns3_topology.png)
 
 Topologi GNS3 dibangun menggunakan **52 node**: 1 NAT (`NAT1`), 13 Router Linux, 13 Ethernet Switch, dan 25 Client Linux. Semua host menggunakan IP statis. Router `Cyberia` adalah satu-satunya gerbang keluar yang terhubung ke `NAT1` (Cloud/Internet), dan `Wired` bertindak sebagai *core distribution hub* yang menghubungkan seluruh cabang.
+
 ---
 ## Subnetting VLSM (GNS3)
 Aturan: **Jumlah IP = host + alamat interface router** pada subnet tersebut.
